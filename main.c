@@ -1,10 +1,10 @@
 #include "raylib.h"
 
-int mandelbrot(float x, float y, int max_iterations) {
+int mandelbrot(float x, float y, int maxIterations) {
     float zx = 0.0, zy = 0.0, zx2 = 0.0, zy2 = 0.0;
     int iterations = 0;
 
-    while (zx2 + zy2 < 4.0 && iterations < max_iterations) {
+    while (zx2 + zy2 < 4.0 && iterations < maxIterations) {
         zy = 2.0 * zx * zy + y;
         zx = zx2 - zy2 + x;
         zx2 = zx * zx;
@@ -18,30 +18,38 @@ int mandelbrot(float x, float y, int max_iterations) {
 int main() {
     int screenWidth = 800;
     int screenHeight = 450;
-    
-    InitWindow(screenWidth, screenHeight, "Mandelbrot Set");
 
+    InitWindow(screenWidth, screenHeight, "Mandelbrot Set");
     SetTargetFPS(60);
 
-    while (!WindowShouldClose()) {
-        BeginDrawing();
+    float scale = 4.0;
+    Vector2 center = {0.0, 0.0};
 
+    while (!WindowShouldClose()) {
+        if (IsKeyDown(KEY_RIGHT)) center.x += 0.02 * scale;
+        if (IsKeyDown(KEY_LEFT)) center.x -= 0.02 * scale;
+        if (IsKeyDown(KEY_UP)) center.y -= 0.02 * scale;
+        if (IsKeyDown(KEY_DOWN)) center.y += 0.02 * scale;
+
+        float wheelMove = GetMouseWheelMove();
+        scale *= (1 - wheelMove * 0.1);
+
+        BeginDrawing();
         ClearBackground(RAYWHITE);
 
         for (int y = 0; y < screenHeight; y++) {
             for (int x = 0; x < screenWidth; x++) {
-                float scaledX = (x - screenWidth / 2.0) * 4.0 / screenWidth;
-                float scaledY = (y - screenHeight / 2.0) * 4.0 / screenHeight;
+                float scaledX = (x - screenWidth / 2.0) * scale / screenWidth + center.x;
+                float scaledY = (y - screenHeight / 2.0) * scale / screenHeight + center.y;
                 int color = mandelbrot(scaledX, scaledY, 1000);
-
                 DrawPixel(x, y, ColorFromHSV(color % 256, 1.0, color < 1000 ? 1.0 : 0));
             }
         }
 
+        DrawFPS(10, 10);
         EndDrawing();
     }
 
     CloseWindow();
-
     return 0;
 }
