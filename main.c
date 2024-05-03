@@ -3,7 +3,7 @@
 int main() {
     int screenWidth = 800;
     int screenHeight = 450;
-    InitWindow(screenWidth, screenHeight, "Mandelbrot Set in Raylib with GLSL");
+    InitWindow(screenWidth, screenHeight, "Mandelbrot Set");
 
     Shader shader = LoadShader(0, "mandelbrot.fs");
     int centerLoc = GetShaderLocation(shader, "center");
