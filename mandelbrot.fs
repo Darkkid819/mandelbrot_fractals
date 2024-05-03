@@ -13,7 +13,7 @@ vec3 hsv2rgb(vec3 c) {
 
 void main() {
     vec2 fragCoord = gl_FragCoord.xy;
-    vec2 c = (fragCoord - vec2(400.0, 225.0)) * vec2(scale, scale * aspectRatio) + center;
+    vec2 c = (fragCoord - vec2(400.0, 225.0)) * vec2(scale * aspectRatio, scale * aspectRatio) + center;
     vec2 z = vec2(0.0, 0.0);
     int i;
     for (i = 0; i < maxIterations && dot(z, z) < 4.0; ++i) {
